@@ -1,5 +1,6 @@
 import csv
 import json
+from itertools import product
 
 data = {}
 parks_citroen = {}
@@ -30,19 +31,26 @@ def read_data_from_megami():
             count = count + 1;
             data[row[1]] = {}
             data[row[1]]['brand'] = row[8]
-            data[row[1]]['sellers'] = []
+            data[row[1]]['superseded_mpn'] = row[27]
+            data[row[1]]['sellers_makes'] = []
             sellers = row[3].split(',')
-            for seller in sellers:
-                details = get_seller_details(seller+" "+row[8], row[1])
+            makes = row[8].split(',')
+            makes_sellers = list(product(sellers,makes))
+            for seller,make in makes_sellers:
+                details = get_seller_details(seller+" "+make, row[1])
+                if not details:
+                    continue
                 temp = {}
                 temp['name'] = seller;
                 temp['price'] = details['price']
                 temp['sale_price'] = details['sale_price']
                 temp['qty'] = details['qty']
                 temp['shipping'] = details['shipping']
-                data[row[1]]['sellers'].append(temp)
+                data[row[1]]['sellers_makes'].append(temp)
 
-        print(data)
+        #dump_data_to_json(data)
+
+
             #data[row[1]]['description'] = row[6]
             #data[row[1]]['quantity'] = row[12]
                 #data[row[1]]['shipping'] = get_shipping_price(row)
@@ -72,8 +80,8 @@ def read_data_from_pricefile():
 
 
 
-
-
+def get_makes_models(makes,models):
+    pass
 
 
 def read_data_from_OnboardedMPNList():
@@ -116,14 +124,27 @@ def update_seller_price(seller, pricing_data):
     elif seller == "Suzuki-Suzuki-price":
         global suzuki_suzuki
         suzuki_suzuki = pricing_data
-
+    else:
+        return False;
 
 def get_seller_details(seller, mpn):
     if seller == 'Parks Renault':
         return parks_renault[mpn]
+    elif seller == 'Parks Nissan':
+        return parks_nissan[mpn]
+    elif seller == 'Parks Citroen':
+        return parks_citroen[mpn]
+    elif seller == 'Parks Peugeot':
+        return parks_peugeot[mpn]
+    elif seller == 'Parks Toyota':
+        return parks_toyota[mpn]
+    elif seller == 'Nissan Nissan':
+        return nissan_nissan[mpn]
+    elif seller == 'Suzuki Suzuki_cars':
+        return suzuki_suzuki[mpn]
 
 
-def dump_data_to_json():
+def dump_data_to_json(data):
     with open("data.json", "w") as write_file:
         json.dump(data, write_file)
 
@@ -131,7 +152,6 @@ def dump_data_to_json():
 def get_product_details_from_csv():
     read_data_from_pricefile()
     read_data_from_megami();
-    read_data_from_OnboardedMPNList();
     return data;
 
 
