@@ -12,28 +12,40 @@ class product:
         self.product_details_excel = {}
         self.driver = driver
 
-    def get_mpn(self):
+    def get_heading(self):
         element = WebDriverWait(self.driver, 15).until(
             EC.visibility_of_element_located((By.XPATH,
                                               "/html/body/div[1]/main/div/div/div[3]/section[1]/form/div[2]/div/div[1]/div[1]/h1"))
         )
-        mpn = re.findall(r'(?<=\().*?(?=\))', element.text)
-        self.product_details_ui['mpn'] = mpn
 
-    def get_price(self):
+        return element.text
+
+    def validate_price(self):
 
         element = WebDriverWait(self.driver, 15).until(
-                EC.visibility_of_element_located((By.XPATH,
-                                                  "/html/body/div[1]/main/div/div/div[3]/section[1]/form/div[3]/div[3]/div[3]/div[1]/div/div/div/div/ul/li/span[2]/span[1]/span"))
-            )
-        self.product_details_ui['price'] = element.text.split('£')[1]
+            EC.visibility_of_element_located((By.XPATH,
+                                              "/html/body/div[1]/main/div/div/div[3]/section[1]/form/div[3]/div[3]/div[3]/div[1]/div/div/div/div/ul/li/span[2]/span[1]/span"))
+        )
+        price = element.text.split('£')[1]
+        price = price.replace(',','')
+        assert float(self.product_details_excel['sellers_makes'][0]['price']) == float(price)
+
 
     def get_shipping(self):
         element = WebDriverWait(self.driver, 15).until(
             EC.visibility_of_element_located((By.XPATH,
                                               '(//div[@class="status"]/span)[1]'))
         )
-        self.product_details_ui['shipping'] = element.text
+
+        return element.text
+
+    def validate_shipping(self):
+        shipping = self.get_shipping()
+        if int(float(self.product_details_excel['sellers_makes'][0]['shipping'])) == 0.00:
+            assert shipping == "Free"
+
+        else:
+            assert float(self.product_details_excel['sellers_makes'][0]['shipping']) == float(shipping.split('£')[1])
 
     def get_make(self):
         element = WebDriverWait(self.driver, 15).until(
@@ -53,11 +65,11 @@ class product:
     def validate_suprseded_message(self):
         # if the mpn has been superseded , price will not be shown ,and superceded mpm will be shown.
         element = WebDriverWait(self.driver, 15).until(
-                EC.presence_of_element_located((By.XPATH,
-                                                '//li[@class="supersession__messages-li"]'))
-            )
+            EC.presence_of_element_located((By.XPATH,
+                                            '//li[@class="supersession__messages-li"]'))
+        )
         assert element.text == 'This part has been superseded (replaced)\nby part number ' + \
-                            self.product_details_excel['superseded_mpn']
+               self.product_details_excel['superseded_mpn']
 
     def accept_permissions(self):
         try:
@@ -75,14 +87,14 @@ class product:
         if int(quantity) > 0:
             element = WebDriverWait(self.driver, 15).until(
                 EC.visibility_of_element_located((By.XPATH,
-                                            "/html/body/div[1]/main/div/div/div[3]/section[1]/form/div[3]/div[3]/div[3]/div[1]/div/div[2]/div[1]/div/input"))
+                                                  "/html/body/div[1]/main/div/div/div[3]/section[1]/form/div[3]/div[3]/div[3]/div[1]/div/div[2]/div[1]/div/input"))
             )
             element.clear()
-            element.send_keys(int(quantity)+1)
+            element.send_keys(int(quantity) + 1)
 
             element = WebDriverWait(self.driver, 15).until(
                 EC.element_to_be_clickable((By.XPATH,
-                                                  "/html/body/div[1]/main/div/div/div[3]/section[1]/form/div[3]/div[3]/div[3]/div[1]/div/div[2]/div[2]/div/div/div[1]/button"))
+                                            "/html/body/div[1]/main/div/div/div[3]/section[1]/form/div[3]/div[3]/div[3]/div[1]/div/div[2]/div[2]/div/div/div[1]/button"))
             )
 
             self.driver.execute_script("arguments[0].click();", element)
@@ -100,21 +112,20 @@ class product:
                                                   '//*[@id="product_addtocart_form"]/div[3]/div[3]/div[3]/div[3]/div[1]/span'))
             )
             assert element.text == 'Out Of Stock'
-            element = self.driver.find_element_by_xpath('/html/body/div[1]/main/div/div/div[3]/section[1]/form/div[3]/div[3]/div[3]/div[3]/div[3]/button/span')
+            element = self.driver.find_element_by_xpath(
+                '/html/body/div[1]/main/div/div/div[3]/section[1]/form/div[3]/div[3]/div[3]/div[3]/div[3]/button/span')
             assert element.text == 'ENQUIRE'
 
     def get_product_details(self, product):
         # product with the lowest price is at the 0th index
-        self.accept_permissions()
         self.product_details_excel = product
-        if self.product_details_excel['superseded_mpn'] is  '':
-            self.get_price()
-            #self.get_make()
+        if self.product_details_excel['superseded_mpn'] is '':
+            self.validate_price()
+            # self.get_make()
             self.validate_quantity()
 
         else:
             self.validate_suprseded_message()
-        self.get_shipping()
-        self.get_mpn()
-        #self.get_description()
+        self.validate_shipping()
+        # self.get_description()
         return self.product_details_ui

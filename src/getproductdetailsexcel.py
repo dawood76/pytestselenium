@@ -42,10 +42,13 @@ def read_data_from_megami():
                     continue
                 temp = {}
                 temp['name'] = seller;
-                temp['price'] = details['price']
-                temp['sale_price'] = details['sale_price']
+                price = float(details['price'])
+                sale_price = float(details['sale_price'])
+                temp['price'] = sale_price if price > sale_price > 0 else price
+                temp['price'] = round(temp['price'] , 2)
                 temp['qty'] = details['qty']
                 temp['shipping'] = details['shipping']
+                temp['brand'] = details['brand']
                 data[row[1]]['sellers_makes'].append(temp)
 
         #dump_data_to_json(data)
@@ -75,6 +78,7 @@ def read_data_from_pricefile():
                     pricing_data[row[0]]['price'] = row[1]
                     pricing_data[row[0]]['sale_price'] = row[4]
                     pricing_data[row[0]]['qty'] = row[3]
+                    pricing_data[row[0]]['brand'] = row[5]
                     pricing_data[row[0]]['shipping'] = get_shipping_price(row[2])
         update_seller_price(seller, pricing_data)
 
