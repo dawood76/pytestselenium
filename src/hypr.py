@@ -8,7 +8,7 @@ import time
 
 chrome_options = Options()
 chrome_options.add_argument("--headless")
-driver = webdriver.Chrome(ChromeDriverManager().install(),chrome_options=chrome_options)
+driver = webdriver.Chrome(ChromeDriverManager().install())
 
 driver.get("https://stageadmin.hypr.pk/login")
 time.sleep(5)
