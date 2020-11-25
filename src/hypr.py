@@ -8,8 +8,8 @@ import time
 
 chrome_options = Options()
 chrome_options.add_argument("--headless")
-driver = webdriver.Chrome(ChromeDriverManager().install(), chrome_options = chrome_options)
-
+#driver = webdriver.Chrome(ChromeDriverManager().install(), chrome_options = chrome_options)
+driver = webdriver.Chrome('chromedriver (3)',  chrome_options = chrome_options)
 driver.get("http://localhost:4200/login")
 time.sleep(5)
 elem = driver.find_element_by_xpath('//input[@placeholder="Email"]')
