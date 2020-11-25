@@ -1,7 +1,14 @@
 from selenium import webdriver
 from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.chrome.options import Options
 import time
-driver = webdriver.Chrome(ChromeDriverManager().install())
+
+
+
+
+chrome_options = Options()
+chrome_options.add_argument("--headless")
+driver = webdriver.Chrome(ChromeDriverManager().install(),chrome_options=chrome_options)
 
 driver.get("https://stageadmin.hypr.pk/login")
 time.sleep(5)
