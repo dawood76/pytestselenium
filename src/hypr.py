@@ -2,9 +2,11 @@ from selenium import webdriver
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.options import Options
 import time
+import os
 
 
 
+print("wdddd", os.getcwd())
 
 chrome_options = Options()
 chrome_options.add_argument("--headless")
