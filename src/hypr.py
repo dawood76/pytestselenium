@@ -21,7 +21,7 @@ print(driver.get_screenshot_as_base64())
 
 elem = driver.find_element_by_xpath('//input[@placeholder="Email"]')
 elem.send_keys("admin@hypr.pk")
-elem = driver.find_element_by_xpath('//input[@placeholder="Password"]')
+elem = driver.find_element_by_xpath('//input[@placeholder="Passwor"]')
 elem.send_keys("12345678")
 elem = driver.find_element_by_xpath('//button[text()="Log in"]')
 elem.click()
