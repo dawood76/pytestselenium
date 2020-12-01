@@ -18,7 +18,8 @@ driver = webdriver.Chrome(ChromeDriverManager(chrome_type=ChromeType.GOOGLE).ins
 driver.get("localhost:4200")
 
 
-time.sleep(5)
+time.sleep(10)
+print(driver.get_screenshot_as_base64())
 elem = driver.find_element_by_xpath('//input[@placeholder="Email"]')
 elem.send_keys("admin@hypr.pk")
 elem = driver.find_element_by_xpath('//input[@placeholder="Password"]')
