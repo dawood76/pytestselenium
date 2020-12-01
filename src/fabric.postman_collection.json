@@ -1,0 +1,210 @@
+{
+	"info": {
+		"_postman_id": "c0a8ca4a-73b6-41fa-8797-9466fa4a1ab3",
+		"name": "fabric",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get Home Page",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Postman-Token",
+						"value": "a85d8bfa-49f2-4e18-b053-6f971a53f090"
+					},
+					{
+						"key": "cache-control",
+						"value": "no-cache"
+					},
+					{
+						"key": "x-site-context",
+						"value": "{\"account\":\"5f68eb5b5d00e10008872cb9\",\"stage\":\"sandbox\", \"channel\": 12,\"date\":\"Tue Dec 01 2020 14:30:20 GMT+0500 (Pakistan Standard Time)\"}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://develop.abchome.fabric.zone/api-xpm/page/live?url=/home",
+					"protocol": "https",
+					"host": [
+						"develop",
+						"abchome",
+						"fabric",
+						"zone"
+					],
+					"path": [
+						"api-xpm",
+						"page",
+						"live"
+					],
+					"query": [
+						{
+							"key": "url",
+							"value": "/home"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get product",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "authority",
+						"value": "uat02.abchome.com"
+					},
+					{
+						"key": "pragma",
+						"value": "no-cache"
+					},
+					{
+						"key": "cache-control",
+						"value": "no-cache"
+					},
+					{
+						"key": "x-site-context",
+						"value": "{\"account\":\"5f68eb5b5d00e10008872cb9\",\"stage\":\"sandbox\", \"channel\": 12,\"date\":\"Tue Dec 01 2020 14:30:20 GMT+0500 (Pakistan Standard Time)\"}"
+					},
+					{
+						"key": "user-agent",
+						"value": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.121 Safari/537.36"
+					},
+					{
+						"key": "accept",
+						"value": "*/*"
+					},
+					{
+						"key": "sec-fetch-site",
+						"value": "same-origin"
+					},
+					{
+						"key": "sec-fetch-mode",
+						"value": "cors"
+					},
+					{
+						"key": "sec-fetch-dest",
+						"value": "empty"
+					},
+					{
+						"key": "referer",
+						"value": "https://uat02.abchome.com/p/1482815/art-of-attention-yoga-healing-cards-by-elena-brower-and-erica-jago"
+					},
+					{
+						"key": "accept-language",
+						"value": "en-US,en;q=0.9"
+					},
+					{
+						"key": "cookie",
+						"value": "_ga=GA1.2.1662693742.1606386597; _gid=GA1.2.2060884510.1606386597; _dy_csc_ses=t; _dy_c_exps=; _dycnst=dg; _dyid=2616591784540603303; _dyjsession=696ec5d705d8964d1f12cf03760c9416; dy_fs_page=uat02.abchome.com; _dycst=dk.l.c.ms.; _dy_toffset=0; __kla_id=eyIkcmVmZXJyZXIiOnsidHMiOjE2MDYzODY1OTksInZhbHVlIjoiIiwiZmlyc3RfcGFnZSI6Imh0dHBzOi8vdWF0MDIuYWJjaG9tZS5jb20vIn0sIiRsYXN0X3JlZmVycmVyIjp7InRzIjoxNjA2Mzg2NjQ2LCJ2YWx1ZSI6IiIsImZpcnN0X3BhZ2UiOiJodHRwczovL3VhdDAyLmFiY2hvbWUuY29tLyJ9fQ==; _dyfs=1606386646242; _dy_lu_ses=696ec5d705d8964d1f12cf03760c9416%3A1606386646245; _dy_geo=PK.AS.PK_PB.PK_PB_Lahore; _dy_df_geo=Pakistan..Lahore; _dy_soct=452311.812111.1606386646; _dy_ses_load_seq=90355%3A1606386646947; tracker_device=98d6bc80-3c06-4e55-bac2-280eb038f437; _gat_UA-11090278-10=1"
+					}
+				],
+				"url": {
+					"raw": "https://develop.abchome.fabric.zone/api-item/item/product/1482815",
+					"protocol": "https",
+					"host": [
+						"develop",
+						"abchome",
+						"fabric",
+						"zone"
+					],
+					"path": [
+						"api-item",
+						"item",
+						"product",
+						"1482815"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "add to cart",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "authority",
+						"value": "uat02.abchome.com"
+					},
+					{
+						"key": "pragma",
+						"value": "no-cache"
+					},
+					{
+						"key": "cache-control",
+						"value": "no-cache"
+					},
+					{
+						"key": "accept",
+						"value": "application/json"
+					},
+					{
+						"key": "x-site-context",
+						"value": "{\"account\":\"5f68eb5b5d00e10008872cb9\",\"stage\":\"sandbox\", \"channel\": 12,\"date\":\"Tue Dec 01 2020 14:30:20 GMT+0500 (Pakistan Standard Time)\"}"
+					},
+					{
+						"key": "user-agent",
+						"value": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.121 Safari/537.36"
+					},
+					{
+						"key": "content-type",
+						"value": "application/json"
+					},
+					{
+						"key": "origin",
+						"value": "https://uat02.abchome.com"
+					},
+					{
+						"key": "sec-fetch-site",
+						"value": "same-origin"
+					},
+					{
+						"key": "sec-fetch-mode",
+						"value": "cors"
+					},
+					{
+						"key": "sec-fetch-dest",
+						"value": "empty"
+					},
+					{
+						"key": "referer",
+						"value": "https://uat02.abchome.com/p/1482815/art-of-attention-yoga-healing-cards-by-elena-brower-and-erica-jago"
+					},
+					{
+						"key": "accept-language",
+						"value": "en-US,en;q=0.9"
+					},
+					{
+						"key": "cookie",
+						"value": "_ga=GA1.2.1662693742.1606386597; _gid=GA1.2.2060884510.1606386597; _dy_csc_ses=t; _dy_c_exps=; _gat_UA-11090278-10=1; _dycnst=dg; _dyid=2616591784540603303; _dyjsession=696ec5d705d8964d1f12cf03760c9416; dy_fs_page=uat02.abchome.com; _dycst=dk.l.c.ms.; _dy_toffset=0; __kla_id=eyIkcmVmZXJyZXIiOnsidHMiOjE2MDYzODY1OTksInZhbHVlIjoiIiwiZmlyc3RfcGFnZSI6Imh0dHBzOi8vdWF0MDIuYWJjaG9tZS5jb20vIn0sIiRsYXN0X3JlZmVycmVyIjp7InRzIjoxNjA2Mzg2NjQ2LCJ2YWx1ZSI6IiIsImZpcnN0X3BhZ2UiOiJodHRwczovL3VhdDAyLmFiY2hvbWUuY29tLyJ9fQ==; _dyfs=1606386646242; _dy_lu_ses=696ec5d705d8964d1f12cf03760c9416%3A1606386646245; _dy_geo=PK.AS.PK_PB.PK_PB_Lahore; _dy_df_geo=Pakistan..Lahore; _dy_soct=452311.812111.1606386646; _dy_ses_load_seq=90355%3A1606386646947; tracker_device=98d6bc80-3c06-4e55-bac2-280eb038f437"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"items\": [\n        {\n            \"id\": 1000001787,\n            \"itemId\": 1000001787,\n            \"quantity\": 1,\n            \"price\": {\n                \"base\": 33,\n                \"sale\": null,\n                \"currency\": \"USD\",\n                \"discount\": {\n                    \"price\": 0\n                }\n            },\n            \"group\": [\n                \"5e2cf79a45570b000863c491\"\n            ],\n            \"sku\": \"1482815\"\n        }\n    ],\n    \"cartId\": null,\n    \"userAuthToken\": null,\n    \"registeredUser\": false\n}"
+				},
+				"url": {
+					"raw": "https://develop.abchome.fabric.zone/api-cart/cart/item",
+					"protocol": "https",
+					"host": [
+						"develop",
+						"abchome",
+						"fabric",
+						"zone"
+					],
+					"path": [
+						"api-cart",
+						"cart",
+						"item"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
