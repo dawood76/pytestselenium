@@ -20,14 +20,15 @@ driver.get("http://localhost:4200")
 
 
 time.sleep(10)
-print(driver.get_screenshot_as_base64())
+
 elem = driver.find_element_by_xpath('//input[@placeholder="Email"]')
 elem.send_keys("admin@hypr.pk")
 elem = driver.find_element_by_xpath('//input[@placeholder="Password"]')
 elem.send_keys("12345678")
 elem = driver.find_element_by_xpath('//button[text()="Log in"]')
 elem.click()
-time.sleep(10)
+time.sleep(3)
+print(driver.get_screenshot_as_base64())
 elem = driver.find_element_by_xpath('//a/span[text()="Products"]')
 elem.click()
 
