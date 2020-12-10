@@ -1,0 +1,1314 @@
+{
+	"info": {
+		"_postman_id": "83e7e30a-e7cb-4fe1-a729-7d993f612375",
+		"name": "customer flow",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "create_data",
+			"item": [
+				{
+					"name": "create_super_admin",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "2ed65fe3-c6b0-4c8b-a4c2-0d582e8fc79e",
+								"exec": [
+									"adminEmail = pm.variables.replaceIn('{{$randomEmail}}')",
+									"adminPassword = pm.variables.replaceIn('{{$randomPassword}}')",
+									"console.log(adminEmail)",
+									"pm.environment.set(\"adminEmail\", adminEmail);",
+									"pm.environment.set(\"adminPassword\", adminPassword)"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "dfb1323a-68d2-4a60-8be6-6e64ee338346",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"address\": \"12323\",\n    \"cnic\": \"123121113123\",\n    \"cnic_picture\": \"\",\n    \"confirmPassword\": \"{{adminPassword}}\",\n    \"name\": \"test\",\n    \"password\": \"{{adminPassword}}\",\n    \"phone\": \"09007860133\",\n    \"username\": \"{{adminEmail}}\",\n    \"roles\": [1]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/auth/signup",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"auth",
+								"signup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ADMIN SIGN IN",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "510b8f3f-c2f0-4bdc-a8f4-4dd11647cb25",
+								"exec": [
+									"response_data = JSON.parse(responseBody);",
+									"token = response_data.data.token",
+									"pm.environment.set(\"adminToken\", token);",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"username\": \"{{adminEmail}}\", \"password\": \"{{adminPassword}}\", \"role_id\": [1, 9, 15, 7, 17]}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/auth/signin",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"auth",
+								"signin"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CREATE COMPANY",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "672cf6b1-610f-45bf-b078-71d613411b3e",
+								"exec": [
+									"response_data = JSON.parse(responseBody);",
+									"companyId = response_data.data.id",
+									"companyCode = response_data.data.code",
+									"pm.environment.set(\"companyId\", companyId);",
+									"pm.environment.set(\"companyCode\", companyCode);",
+									"pm.environment.set(\"count\", 1);",
+									"",
+									"",
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{adminToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"{{$randomCatchPhrase}}\", \n    \"code\":\"{{$randomCatchPhrase}}\"\n}"
+						},
+						"url": {
+							"raw": "{{baseurl}}/company",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"company"
+							]
+						},
+						"description": "create company"
+					},
+					"response": []
+				},
+				{
+					"name": "CREATE BUSINESS UNIT",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "9c7fec9b-9f49-4cef-8d3d-b699ae0dfdfb",
+								"exec": [
+									"adminEmail = pm.variables.replaceIn('{{$randomAdjective}}')",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "8f7b0595-b992-429f-a549-9c7cb9554a05",
+								"exec": [
+									"responseBody = JSON.parse(responseBody)",
+									"buisnessUnitId = responseBody.data.unit.id",
+									"pm.environment.set(\"buisnessUnitId\", buisnessUnitId);",
+									"",
+									"var currentCount = pm.environment.get(\"count\")",
+									"if (currentCount > 0){",
+									" currentCount = currentCount -1 ;",
+									" pm.environment.set(\"count\", currentCount);",
+									" postman.setNextRequest(\"CREATE BUSINESS UNIT\");",
+									"}",
+									"",
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{adminToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"{{$randomLastName}}\",\n\t\"company_id\": {{companyId}}\n}"
+						},
+						"url": {
+							"raw": "{{baseurl}}/businessUnit",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"businessUnit"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CREATE LOCATION",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "ae0cf898-2e53-4ec7-a35c-60aa3dcdab6c",
+								"exec": [
+									"companyName = pm.variables.replaceIn('{{$randomCompanyName}}')",
+									"pm.environment.set(\"companyName\", companyName);",
+									"",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "40cba883-067b-4f26-a812-5dd7b96d9b6a",
+								"exec": [
+									"responseBody = JSON.parse(responseBody);",
+									"pm.environment.set(\"locationId\", responseBody.data.location.id);",
+									"",
+									"",
+									"pm.test(\"verify company name returned in the response is equal to the one given in the request\", function () {",
+									"    pm.expect(responseBody.data.location.name).to.eql(pm.environment.get(\"companyName\"))",
+									"});",
+									"",
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{adminToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"{{companyName}}\",\n\t\"company_id\": \"{{companyId}}\",\n\t\"business_unit_id\": \"{{buisnessUnitId}}\",\n    \"service_charge_type\": \"FLAT\", \n    \"service_charge_value\": 1.2, \n    \"delivery_charge_type\": \"FLAT\", \n    \"delivery_charge_value\": 1.2\n}"
+						},
+						"url": {
+							"raw": "{{baseurl}}/location",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"location"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CREATE PRODUCT CATEGORY ( SUB CAT INCLUDED )",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "2aba2888-f579-4906-9b19-6e6f98596a8a",
+								"exec": [
+									"responseBody = JSON.parse(responseBody)",
+									"pm.environment.set(\"categoryId\", responseBody.data.id);",
+									"",
+									"pm.environment.set(\"productsArray\", null);",
+									"pm.environment.set(\"productsToCreate\", 10);",
+									"",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{adminToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"{{$randomAdjective}}\",\n    \"priority\": 1,\n    \"start_date\": \"2020-06-06T19:36:14\",\n    \"end_date\": \"2020-06-06T19:36:14\",\n    \"location_id\": {{locationId}},\n    \"sub_categories\": [\n        {\n            \"name\": \"chips\",\n            \"location_id\": {{locationId}},\n            \"priority\": 1,\n            \"start_date\": \"2020-06-06T19:36:14\",\n            \"end_date\": \"2021-06-06T19:36:14\"\n        },\n        {\n            \"name\": \"biscuits\",\n            \"priority\": 2,\n            \"location_id\": {{locationId}},\n            \"start_date\": \"2020-06-06T19:36:14\",\n            \"end_date\": \"2021-06-06T19:36:14\"\n        }\n    ]\n}"
+						},
+						"url": {
+							"raw": "{{baseurl}}/categories/createProductCategory",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"categories",
+								"createProductCategory"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CREATE PRODUCT",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "166fb68e-aa37-45ad-b84a-497997cad74f",
+								"exec": [
+									"productSKU = pm.variables.replaceIn('{{$randomPassword}}')",
+									"pm.environment.set(\"productSKU\" , productSKU);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "6540423e-b846-4919-8fcd-ab0c60a6c02c",
+								"exec": [
+									"currentCount = pm.environment.get(\"productsToCreate\")",
+									"productsArray = pm.environment.get(\"productsArray\");",
+									"productSKU = pm.environment.get(\"productSKU\")",
+									"",
+									"if(productsArray == null)",
+									"{",
+									"    productsArray = [];",
+									"}",
+									"",
+									"else{",
+									"    productsArray = JSON.parse(productsArray)",
+									"   ",
+									"}",
+									"productsArray.push(productSKU)",
+									"pm.environment.set(\"productsArray\", JSON.stringify(productsArray));",
+									"",
+									"",
+									"if (currentCount > 0){",
+									" currentCount = currentCount -1 ;",
+									" pm.environment.set(\"productsToCreate\", currentCount);",
+									" postman.setNextRequest(\"CREATE PRODUCT\");",
+									"}",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{adminToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"sku\": \"{{productSKU}}\",\n    \"name\": \"gala\",\n    \"size\": \"small\",\n    \"unit\": \"pack\",\n    \"stock_quantity\": 100,\n    \"category_id\": [{{categoryId}}],\n    \"brand\": \"LU\",\n    \"urdu_name\": \"test\",\n    \"urdu_unit\": \"kg\",\n    \"urdu_size\": \"small\",\n    \"urdu_brand\": \"test\",\n    \"disabled\": false,\n    \"barcode\": \"test\",\n    \"description\": \"egg biscuits\",\n    \"consent_required\": false,\n    \"location_id\": {{locationId}},\n    \"price\": 20,\n    \"tax_percent\": 0.5,\n    \"tax_inclusive\": false\n}"
+						},
+						"url": {
+							"raw": "{{baseurl}}/product/createProduct",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"product",
+								"createProduct"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "customer_flow",
+			"item": [
+				{
+					"name": "REGISTER CUSTOMER ",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "fc8a5000-5c07-4ae0-90b4-bc8d2e279926",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"company_code\": \"{{companyCode}}\", \"phone\": \"923218056762\" ,\"dontSendOtp\": true}\n\n\n\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/auth/registerCustomer",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"auth",
+								"registerCustomer"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CREATE PASSWORD",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "65f00a38-a989-4b95-9c74-33fbd17d5979",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"code\":\"{{companyCode}}\",\n    \"phone\":\"923218056762\"\n\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/auth/createPassword",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"auth",
+								"createPassword"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SIGN_IN",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "84aa912d-fc66-41b6-b244-94e47609eabb",
+								"exec": [
+									"responseBody = JSON.parse(responseBody);",
+									"token = responseBody.data.token",
+									"pm.environment.set(\"token\", token);",
+									"pm.globals.set(\"signedInUser\", true);",
+									"",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"validate message\", function () {",
+									"        pm.expect(responseBody.message).to.eql(\"Operation is successfully executed\")",
+									"    });",
+									"",
+									"",
+									"pm.test(\"validate user message\", function () {",
+									"        pm.expect(responseBody.userMessage).to.eql(\"Your request has been processed successfully\")",
+									"    });",
+									"",
+									"pm.test(\"value of success key is true\", function () {",
+									"        pm.expect(responseBody.success).to.eql(true)",
+									"    });",
+									"",
+									"pm.test(\"Verify phone number\", function(){",
+									"    pm.expect(responseBody.data.user.phone).to.eql(pm.globals.get(\"phoneNumber\"));",
+									"",
+									"})",
+									"",
+									"pm.test(\"Verify that token gets returned in the response of sign in API\", function(){",
+									"    pm.expect(responseBody.data.token).not.NaN;",
+									"",
+									"})",
+									"",
+									"",
+									"",
+									"",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "f0ab355b-4acd-498f-950f-3e63547b1eb5",
+								"exec": [
+									"pm.globals.set(\"phoneNumber\", \"923218056762\");"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"phone\": \"{{phoneNumber}}\",\n    \"password\": \"hyprConsumerSignIn\",\n    \"company_code\" : \"{{companyCode}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/auth/signinCustomer",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"auth",
+								"signinCustomer"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Set Terms Accepted",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "9b148e66-13fe-4fe2-a1f6-eb9e8be2ea20",
+								"exec": [
+									"signedInUser = pm.globals.get(\"signedInUser\");",
+									"",
+									"if(signedInUser == true){",
+									"    pm.test(\"Status code is 200\", function () {",
+									"        pm.response.to.have.status(200);",
+									"    });",
+									"}",
+									"",
+									"else{",
+									"     pm.test(\"Status code is 401 If auth token is null\", function () {",
+									"        pm.response.to.have.status(401);",
+									"    });",
+									"",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"phone\": \"{{phoneNumber}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/customer/setTermsAccepted",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"customer",
+								"setTermsAccepted"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "FETCH ALL CATEGORIES",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "1a623e04-1905-44be-a649-37a03e5b9c44",
+								"exec": [
+									"responseBody = JSON.parse(responseBody)",
+									"",
+									"",
+									"signedInUser = pm.globals.get(\"signedInUser\");",
+									"",
+									"if(signedInUser == true){",
+									"",
+									"    pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"    });",
+									"",
+									"    pm.test(\"validate message\", function () {",
+									"        pm.expect(responseBody.message).to.eql(\"Operation is successfully executed\")",
+									"    });",
+									"",
+									"    pm.test(\"validate user message\", function () {",
+									"        pm.expect(responseBody.userMessage).to.eql(\"Your request has been processed successfully\")",
+									"    });",
+									"",
+									"    pm.test(\"value of success key is true\", function () {",
+									"        pm.expect(responseBody.success).to.eql(true)",
+									"    });",
+									"}",
+									"",
+									"else{",
+									"     pm.test(\"Status code returned is 200 If auth token is null\", function () {",
+									"        pm.response.to.have.status(200);",
+									"    });",
+									"    ",
+									"",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseurl}}/categories/getAllCategories?location_id={{locationId}}&page=1&per_page=10",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"categories",
+								"getAllCategories"
+							],
+							"query": [
+								{
+									"key": "location_id",
+									"value": "{{locationId}}"
+								},
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "per_page",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET PRODUCTS BY CATEGORY",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "a6a8c7c0-1f61-465a-958e-a7d6ec97a8f2",
+								"exec": [
+									"responseBody = JSON.parse(responseBody)",
+									"productsArray = responseBody.data.products",
+									"",
+									"pm.environment.set(\"productsArray\", JSON.stringify(productsArray));",
+									"",
+									"signedInUser = pm.globals.get(\"signedInUser\");",
+									"",
+									"if(signedInUser == true){",
+									"    pm.test(\"Status code is 200\", function () {",
+									"        pm.response.to.have.status(200);",
+									"    });",
+									"",
+									"    pm.test(\"validate message\", function () {",
+									"        pm.expect(responseBody.message).to.eql(\"Operation is successfully executed\")",
+									"    });",
+									"",
+									"    pm.test(\"validate user message\", function () {",
+									"        pm.expect(responseBody.userMessage).to.eql(\"Your request has been processed successfully\")",
+									"    });",
+									"",
+									"    pm.test(\"value of success key is true\", function () {",
+									"        pm.expect(responseBody.success).to.eql(true)",
+									"    });",
+									"}",
+									"else{",
+									"    pm.test(\"Status code returned is 200 If auth token is null\", function () {",
+									"        pm.response.to.have.status(200);",
+									"    });",
+									"    ",
+									"",
+									"",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseurl}}/product/getProductByCategory?per_page=10&category_id={{categoryId}}&page=1",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"product",
+								"getProductByCategory"
+							],
+							"query": [
+								{
+									"key": "per_page",
+									"value": "10"
+								},
+								{
+									"key": "category_id",
+									"value": "{{categoryId}}"
+								},
+								{
+									"key": "page",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CREATE CART",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "7f22fe04-ff75-493c-9eb1-fbd69afe3814",
+								"exec": [
+									"//product details fetched using get prodyuct ",
+									"productsArray = pm.environment.get(\"productsArray\");",
+									"locationId = pm.environment.get(\"locationId\")",
+									"productsArray = JSON.parse(productsArray)",
+									"cartItems = []",
+									"",
+									"product = {\"product_sku\": productsArray[0].sku, \"quantity\": productsArray[0].stock_quantity\t- 1}",
+									"",
+									"cartItems.push(product)",
+									"",
+									"",
+									"createCartBody = {",
+									"    \"location_id\": locationId,",
+									"\t\"cartItems\": cartItems",
+									"}",
+									"",
+									"pm.environment.set(\"createCartBody\", JSON.stringify(createCartBody));",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "cc7bd9bf-76bd-4951-990a-a63969831aa1",
+								"exec": [
+									"response_data = JSON.parse(responseBody);",
+									"pm.globals.set(\"orderHasBeenPlaced\", false);",
+									"",
+									"",
+									"signedInUser = pm.globals.get(\"signedInUser\");",
+									"",
+									"if(signedInUser == true){",
+									"    cart_id = response_data.data.result.id",
+									"    pm.environment.set(\"cart_id\", cart_id);",
+									"    var productsArray = JSON.parse(pm.environment.get(\"productsArray\"));",
+									"    //console.log(productsArray[0].location_prices[0].price)",
+									"    pm.test(\"cart items array has 1 item\", function () {",
+									"        pm.expect(response_data.data.result.cartItems.length).to.eql(1)",
+									"    });",
+									"",
+									"    pm.test(\"validate message\", function () {",
+									"        pm.expect(response_data.message).to.eql(\"Operation is successfully executed\")",
+									"    });",
+									"",
+									"    pm.test(\"validate user message\", function () {",
+									"        pm.expect(response_data.userMessage).to.eql(\"Your request has been processed successfully\")",
+									"    });",
+									"",
+									"    pm.test(\"coupon has not been applied\", function () {",
+									"        pm.expect(response_data.data.result.is_coupon).to.eql(0)",
+									"    });",
+									"",
+									"    pm.test(\"coupon discount is 0\", function () {",
+									"        pm.expect(response_data.data.result.coupon_discount).to.eql(0)",
+									"    });",
+									"",
+									"    pm.test(\"value of success key is true\", function () {",
+									"        pm.expect(response_data.success).to.eql(true)",
+									"    });",
+									"",
+									"    pm.test(\"Status code is 200\", function () {",
+									"        pm.response.to.have.status(200);",
+									"    });",
+									"}",
+									"",
+									"else{",
+									"     pm.test(\"Status code returned is 401 If auth token is null\", function () {",
+									"        pm.response.to.have.status(401);",
+									"    });",
+									"    ",
+									"",
+									"}",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{{createCartBody}}",
+							"options": {
+								"raw": {}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/order/createOrderFromCart",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"order",
+								"createOrderFromCart"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UPDATE CART",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "f7bc092a-c54a-4164-8096-188fb4fae42f",
+								"exec": [
+									"responseBody = JSON.parse(responseBody)",
+									"productsArray = pm.environment.get(\"productsArray\");",
+									"productsArray = JSON.parse(productsArray)",
+									"",
+									"",
+									"",
+									"signedInUser = pm.globals.get(\"signedInUser\");",
+									"if(signedInUser == true){",
+									"    numberOfItemsInCart = responseBody.data.result.cartItems.length",
+									"",
+									"    pm.test(\"Status code is 200\", function () {",
+									"        pm.response.to.have.status(200);",
+									"    });",
+									"",
+									"    pm.test(\"validate cart id\", function () {",
+									"        pm.expect(responseBody.data.result.id).to.eql(pm.environment.get(\"cart_id\"))",
+									"    ;",
+									"    });",
+									"",
+									"    pm.test(\"Validate number of items in the cart after the cart has been updated\", function(){",
+									"        pm.expect(numberOfItemsInCart).to.eql(productsArray.length);",
+									"    ",
+									"    });",
+									"",
+									"    pm.test(\"validate message\", function () {",
+									"        pm.expect(responseBody.message).to.eql(\"Operation is successfully executed\")",
+									"    });",
+									"",
+									"    pm.test(\"validate user message\", function () {",
+									"        pm.expect(responseBody.userMessage).to.eql(\"Your request has been processed successfully\")",
+									"    });",
+									"",
+									"    pm.test(\"value of success key is true\", function () {",
+									"        pm.expect(responseBody.success).to.eql(true)",
+									"    });",
+									"}",
+									"",
+									"else{",
+									"    pm.test(\"Status code returned is 401 If auth token is null\", function () {",
+									"        pm.response.to.have.status(401);",
+									"    });",
+									"   ",
+									"",
+									"}",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "eccdea84-2ec0-43d9-9138-49b73912b7a5",
+								"exec": [
+									"cartId = pm.environment.get(\"cart_id\");",
+									"",
+									"createCartBody = pm.environment.get(\"createCartBody\");",
+									"createCartBody = JSON.parse(createCartBody);",
+									"",
+									"productsArray = pm.environment.get(\"productsArray\");",
+									"productsArray = JSON.parse(productsArray)",
+									"",
+									"updateCartBody = { \"cartId\": cartId ,\"cartItems\":createCartBody.cartItems}",
+									"for(i=1; i< productsArray.length; i++){",
+									"        product =  { \"product_sku\": productsArray[i].sku, \"quantity\": productsArray[i].stock_quantity/2}",
+									"        updateCartBody.cartItems.push(product)",
+									"",
+									"}",
+									"",
+									"pm.environment.set(\"updateCartBody\", JSON.stringify(updateCartBody));",
+									"console.log(createCartBody)",
+									"",
+									"",
+									"",
+									"",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{{updateCartBody}}",
+							"options": {
+								"raw": {}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/order/updateOrderFromCart",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"order",
+								"updateOrderFromCart"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "RESERVE CART",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "e42c06b0-f9d2-49f0-8088-c2246ac739ba",
+								"exec": [
+									"responseBody = JSON.parse(responseBody)",
+									"orderHasBeenPlaced = pm.globals.get(\"orderHasBeenPlaced\");",
+									"",
+									"signedInUser = pm.globals.get(\"signedInUser\");",
+									"",
+									"if(signedInUser == true){",
+									"    if (orderHasBeenPlaced == false){",
+									"        pm.test(\"Status code is 200\", function () {",
+									"            pm.response.to.have.status(200);",
+									"        });",
+									"",
+									"        pm.test(\"validate message\", function () {",
+									"            pm.expect(responseBody.message).to.eql(\"Operation is successfully executed\")",
+									"        });",
+									"",
+									"",
+									"        pm.test(\"validate user message\", function () {",
+									"            pm.expect(responseBody.userMessage).to.eql(\"Your request has been processed successfully\")",
+									"        });",
+									"",
+									"        pm.test(\"value of success key is true\", function () {",
+									"            pm.expect(responseBody.success).to.eql(true)",
+									"        });",
+									"    }",
+									"",
+									"    else{",
+									"    pm.test(\"Status code is 400\", function () {",
+									"            pm.response.to.have.status(400);",
+									"        });",
+									"",
+									"    pm.test(\"validate error message 'ORDER ALREADY PLACED!' is returned\" , function () {",
+									"        pm.expect(responseBody.message).to.eql(\"ORDER ALREADY PLACED!\")",
+									"        });",
+									"        ",
+									"    pm.test(\"value of success key is false\", function () {",
+									"            pm.expect(responseBody.success).to.eql(false)",
+									"        });",
+									"    }",
+									"}",
+									"else{",
+									"     pm.test(\"Status code returned is 401 If auth token is null\", function () {",
+									"        pm.response.to.have.status(401);",
+									"    });",
+									"",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"cartId\": \"{{cart_id}}\"\n}"
+						},
+						"url": {
+							"raw": "{{baseurl}}/order/reservedQuantityByCart",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"order",
+								"reservedQuantityByCart"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CREATE ORDER",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "14db29da-cc59-4934-b4fe-441ba42cf683",
+								"exec": [
+									"responseBody = JSON.parse(responseBody)",
+									"orderHasBeenPlaced = pm.globals.get(\"orderHasBeenPlaced\");",
+									"signedInUser = pm.globals.get(\"signedInUser\");",
+									"",
+									"console.log(pm.environment.get(\"orderHasBeenPlaced\"))",
+									"console.log(orderHasBeenPlaced)",
+									"",
+									"if(signedInUser == true){",
+									"    if(orderHasBeenPlaced == false){",
+									"        pm.test(\"Status code is 200\", function () {",
+									"            pm.response.to.have.status(200);",
+									"        });",
+									"",
+									"        pm.test(\"validate message\", function () {",
+									"            pm.expect(responseBody.message).to.eql(\"Operation is successfully executed\")",
+									"        });",
+									"",
+									"",
+									"        pm.test(\"validate user message\", function () {",
+									"            pm.expect(responseBody.userMessage).to.eql(\"Your request has been processed successfully\")",
+									"        });",
+									"",
+									"",
+									"        pm.test(\"value of success key is true\", function () {",
+									"            pm.expect(responseBody.success).to.eql(true)",
+									"        });",
+									"",
+									"",
+									"        //pm.environment.set(\"orderHasBeenPlaced\", true);",
+									"",
+									"        pm.globals.set(\"orderHasBeenPlaced\", true);",
+									"        console.log(pm.environment.get(\"orderHasBeenPlaced\"))",
+									"        postman.setNextRequest(\"RESERVE CART\");",
+									"        ",
+									"    }",
+									"",
+									"    else{",
+									"        pm.test(\"Status code is 400\", function () {",
+									"        pm.response.to.have.status(400);",
+									"        });",
+									"",
+									"        pm.test(\"validate error message 'ORDER ALREADY PLACED!' is returned\" , function () {",
+									"        pm.expect(responseBody.message).to.eql(\"ORDER ALREADY PLACED!\")",
+									"        });",
+									"        pm.test(\"value of success key is false\", function () {",
+									"        pm.expect(responseBody.success).to.eql(false)",
+									"        });",
+									"",
+									"        pm.globals.set(\"orderHasBeenPlaced\", false);",
+									"        //pm.environment.set(\"orderHasBeenPlaced\", false);",
+									"",
+									"        pm.environment.set(\"token\", \"\");",
+									"        pm.globals.set(\"signedInUser\", false);",
+									"        postman.setNextRequest('Set Terms Accepted')",
+									"            ",
+									"    }",
+									"",
+									"  ",
+									"}",
+									"",
+									"else{",
+									"",
+									"    pm.test(\"Status code returned is 401 If auth token is null\", function () {",
+									"        pm.response.to.have.status(401);",
+									"    });",
+									"   ",
+									"}",
+									"",
+									"",
+									"",
+									"",
+									"",
+									"",
+									"",
+									"",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"customerData\": {\n        \"customer_reference\": \"{{phoneNumber}}\",\n        \"customer_reference_type\": \"phone\",\n        \"address\": \"xyz\",\n        \"address_line_1\": \"xyz\",\n        \"address_line_2\": \"xyz\",\n        \"city\": \"Lahore\",\n        \"name\": \"dawood\",\n        \"phone\": \"{{phoneNumber}}\"\n    },\n    \"location_id\": {{locationId}},\n    \"cart_id\": \"{{cart_id}}\",\n    \"payment_type\": \"COD\",\n    \"payment_reference\": \"HYPR_STAGE_CHECK\",\n    \"deliveryTime\": \"2020-12-20T12:02:00\"\n}"
+						},
+						"url": {
+							"raw": "{{baseurl}}/order/placeOrderFromCart",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"order",
+								"placeOrderFromCart"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "7e9ba656-4883-44c0-902e-44b6d82e8a55",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "b1e365b5-a9a3-40a7-81d9-16562d88e5ea",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"protocolProfileBehavior": {}
+}
